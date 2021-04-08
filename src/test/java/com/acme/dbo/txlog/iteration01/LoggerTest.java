@@ -14,6 +14,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     //region given
     @Before
     public void setUpSystemOut() throws IOException {
+        Facade facade = new Facade();
         resetOut();
         captureSysout();
     }
@@ -27,6 +28,7 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     @Test
     public void shouldLogInteger() throws IOException {
         //region when
+        facade
         Facade.log(1);
         Facade.log(0);
         Facade.log(-1);
