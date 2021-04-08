@@ -21,6 +21,6 @@ public class IntegerMessage implements DecoratingMessage {
 
     @Override
     public String getDecoratedMessage() {
-        return "int: " + body;
+        return "primitive: " + body;
     }
 }

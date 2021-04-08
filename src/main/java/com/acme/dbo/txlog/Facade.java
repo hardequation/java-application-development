@@ -43,6 +43,12 @@ public class Facade {
 //        numberAccumulatorStrategy((Number) message);
     }
 
+    public void log(String message, SeverityLevel severityLevel) {
+        controller.log(new StringMessage(message), severityLevel);
+//        updateCurrentType("Byte");
+//        numberAccumulatorStrategy((Number) message);
+    }
+
     public void log(Byte message, SeverityLevel severityLevel) {
         controller.log(new ByteMessage(message), severityLevel);
 //        updateCurrentType("String");
@@ -77,31 +83,7 @@ public class Facade {
 
     }
 
-    private static void numberAccumulatorStrategy(Number message) {
-        int maxValue = 0;
-        int logMessage = message.intValue();
-//add 'else' branch and divide in two methods
-        if (message instanceof Integer) {
-            maxValue = Integer.MAX_VALUE;
-        }
-        if (message instanceof Byte) {
-            maxValue = Byte.MAX_VALUE;
-        }
-//move to additional method
-        if (message.intValue() == maxValue) {
-            flush();
-            numberAccumulator = logMessage;
-            flush();
-            return;
-        }
 
-        if (numberAccumulator == null) {
-            numberAccumulator = logMessage;
-
-        } else {
-            numberAccumulator += logMessage;
-        }
-    }
 
     private static void arrayStrategy(int[] message) {
         logToConsolePure(ARRAY_PREFIX, "");

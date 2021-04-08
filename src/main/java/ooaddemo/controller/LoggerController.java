@@ -12,7 +12,7 @@ public class LoggerController extends ValidatingController {
     private final Printer printer;
     private final MessageFilter filter;
 
-    /**
+    /**int
      * Constructor DI
      */
     public LoggerController(Printer printer, MessageFilter filter) {

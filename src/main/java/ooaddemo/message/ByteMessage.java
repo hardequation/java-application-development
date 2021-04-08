@@ -21,6 +21,6 @@ public class ByteMessage implements DecoratingMessage {
 
     @Override
     public String getDecoratedMessage() {
-        return "byte: " + body;
+        return "primitive: " + body;
     }
 }
