@@ -2,6 +2,7 @@ package com.acme.dbo.txlog.iteration01;
 
 import com.acme.dbo.txlog.Facade;
 import com.acme.dbo.txlog.SysoutCaptureAndAssertionAbility;
+import ooaddemo.domain.SeverityLevel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +13,10 @@ import static java.lang.System.lineSeparator;
 
 public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     //region given
+    Facade facade;
     @Before
     public void setUpSystemOut() throws IOException {
-        Facade facade = new Facade();
+        facade = new Facade();
         resetOut();
         captureSysout();
     }
@@ -28,10 +30,10 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     @Test
     public void shouldLogInteger() throws IOException {
         //region when
-        facade
-        Facade.log(1);
-        Facade.log(0);
-        Facade.log(-1);
+        facade.log(1, SeverityLevel.WARNING);
+        facade.log(1, SeverityLevel.WARNING);
+        facade.log(0, SeverityLevel.WARNING);
+        facade.log(-1, SeverityLevel.WARNING);
         //endregion
 
         //region then

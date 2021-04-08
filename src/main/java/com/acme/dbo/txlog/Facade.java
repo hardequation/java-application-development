@@ -31,19 +31,19 @@ public class Facade {
 
 
 //move current type updating and call subject accumulator in log
-    public static void log(int message, SeverityLevel severityLevel) {
+    public void log(int message, SeverityLevel severityLevel) {
         controller.log(new IntegerMessage(message), severityLevel);
         //updateCurrentType("Integer");
         //numberAccumulatorStrategy((Number) message);
     }
 
-    public static void log(byte message, SeverityLevel severityLevel) {
+    public void log(byte message, SeverityLevel severityLevel) {
         controller.log(new IntegerMessage(message), severityLevel);
 //        updateCurrentType("Byte");
 //        numberAccumulatorStrategy((Number) message);
     }
 
-    public static void log(Byte message, SeverityLevel severityLevel) {
+    public void log(Byte message, SeverityLevel severityLevel) {
         controller.log(new ByteMessage(message), severityLevel);
 //        updateCurrentType("String");
 //        stringAccumulatorStrategy((String) message);
