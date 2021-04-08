@@ -28,4 +28,8 @@ public class LoggerController extends ValidatingController {
             printer.print(message.getDecoratedMessage());
         }
     }
+
+    public MessageFilter getFilter() {
+        return filter;
+    }
 }
