@@ -7,63 +7,40 @@ package com.acme.dbo.txlog;
 import ooaddemo.controller.LoggerController;
 import ooaddemo.domain.SeverityLevel;
 import ooaddemo.filter.SeverityMessageFilter;
-import ooaddemo.message.*;
+import ooaddemo.message.StringMessage;
 import ooaddemo.printer.ConsolePrinter;
 
 public class Facade {
+    public static final String PRIMITIVE_PREFIX = "primitive: ";
+    public static final String STRING_PREFIX = "string: ";
+    private static final String PRIMITIVE_POSTFIX = "";
+    private static final String STRING_POSTFIX = "";
 
-
-    private static DecoratingMessage currentMessage;
-
-    private static final LoggerController controller = new LoggerController(
+    private static LoggerController controller = new LoggerController(
             new ConsolePrinter(),
             new SeverityMessageFilter(SeverityLevel.DEBUG)
     );
 
-    public void log(int message, SeverityLevel severityLevel) {
-        DecoratingMessage stringMessage = new IntegerMessage(message);
-        log(stringMessage, severityLevel);
+    public static void log(int message) {
+        //controller.log(new StringMessage(message), ...);
     }
 
-    public void log(byte message, SeverityLevel severityLevel) {
-        DecoratingMessage byteMessage = new ByteMessage(message);
-        log(byteMessage, severityLevel);
+    public static void log(byte message) {
+        printMessage(decorate(PRIMITIVE_PREFIX, message, PRIMITIVE_POSTFIX));
     }
 
-    public void log(String message, SeverityLevel severityLevel) {
-        DecoratingMessage stringMessage = new StringMessage(message);
-        log(stringMessage, severityLevel);
+    public static void log(String message) {
+        printMessage(decorate(STRING_PREFIX, message, STRING_POSTFIX));
     }
 
 
-    private void log(DecoratingMessage message, SeverityLevel severityLevel) {
-        if (currentMessage == null) {
-            currentMessage = message;
-            return;
-        }
-        if (currentMessage.shouldFlush(message)) {
-            controller.log(currentMessage, severityLevel);
-            currentMessage = message;
-            return;
-        }
-        currentMessage.add(message);
+    private static String decorate(String stringPrefix, Object message, String stringPostfix) {
+        System.out.printf("jsdhfgsj %d hgdjhf %s jkgh %s kjgkh %s lfgf", stringPrefix, message, stringPostfix);
+//        REGEXP("regexp")
+        return stringPrefix + message + stringPostfix;
     }
 
-    public  void log(int[] message, SeverityLevel severityLevel) {
-        DecoratingMessage arrayMessage = new ArrayMessage(message);
-        log(arrayMessage, severityLevel);
+    private static void printMessage(Object message) {
+        System.out.println(message);
     }
-
-    public  void log(int[][] message, SeverityLevel severityLevel) {
-        DecoratingMessage matrixMessage = new MatrixMessage(message);
-        log(matrixMessage, severityLevel);
-    }
-
-
-
-    public void flush(SeverityLevel severityLevel) {
-        controller.log(currentMessage, severityLevel);
-    }
-
-
 }
