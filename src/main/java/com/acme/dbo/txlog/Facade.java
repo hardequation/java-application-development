@@ -7,136 +7,63 @@ package com.acme.dbo.txlog;
 import ooaddemo.controller.LoggerController;
 import ooaddemo.domain.SeverityLevel;
 import ooaddemo.filter.SeverityMessageFilter;
-import ooaddemo.message.ByteMessage;
-import ooaddemo.message.IntegerMessage;
-import ooaddemo.message.StringMessage;
+import ooaddemo.message.*;
 import ooaddemo.printer.ConsolePrinter;
 
-import java.util.Arrays;
-
 public class Facade {
-    public static final String PRIMITIVE_PREFIX = "primitive: ";
-    public static final String STRING_PREFIX = "string: ";
-    public static final String ARRAY_PREFIX = "primitives array: ";
-    public static final String MATRIX_PREFIX = "primitives matrix: ";
-    private static String currentType = null;
-    private static String stringMessageBody = null;
-    private static Integer duplicateMessageCount = null;
-    private static Integer numberAccumulator = null;
 
-    private static LoggerController controller = new LoggerController(
-        new ConsolePrinter(),
-        new SeverityMessageFilter(SeverityLevel.DEBUG)
+
+    private static DecoratingMessage currentMessage;
+
+    private static final LoggerController controller = new LoggerController(
+            new ConsolePrinter(),
+            new SeverityMessageFilter(SeverityLevel.DEBUG)
     );
 
-
-//move current type updating and call subject accumulator in log
     public void log(int message, SeverityLevel severityLevel) {
-        controller.log(new IntegerMessage(message), severityLevel);
-        //updateCurrentType("Integer");
-        //numberAccumulatorStrategy((Number) message);
+        DecoratingMessage stringMessage = new IntegerMessage(message);
+        log(stringMessage, severityLevel);
     }
 
     public void log(byte message, SeverityLevel severityLevel) {
-        controller.log(new IntegerMessage(message), severityLevel);
-//        updateCurrentType("Byte");
-//        numberAccumulatorStrategy((Number) message);
+        DecoratingMessage byteMessage = new ByteMessage(message);
+        log(byteMessage, severityLevel);
     }
 
     public void log(String message, SeverityLevel severityLevel) {
-        controller.log(new StringMessage(message), severityLevel);
-//        updateCurrentType("Byte");
-//        numberAccumulatorStrategy((Number) message);
+        DecoratingMessage stringMessage = new StringMessage(message);
+        log(stringMessage, severityLevel);
     }
 
-    public void log(Byte message, SeverityLevel severityLevel) {
-        controller.log(new ByteMessage(message), severityLevel);
-//        updateCurrentType("String");
-//        stringAccumulatorStrategy((String) message);
-    }
 
-    public static void log(int[] message) {
-        updateCurrentType("int[]");
-        arrayStrategy(message);
-    }
-
-    public static void log(int[][] message) {
-        updateCurrentType("int[][]");
-        arrayStrategy(message);
-    }
-
-    private static void updateCurrentType(String type) {
-        if (!type.equals(currentType)) {
-            currentType = type;
-            flush();
-        }
-    }
-
-    private static void stringAccumulatorStrategy(String message) {
-        if (stringMessageBody != null && stringMessageBody.equals(message)) {
-            duplicateMessageCount++;
+    private void log(DecoratingMessage message, SeverityLevel severityLevel) {
+        if (currentMessage == null) {
+            currentMessage = message;
             return;
         }
-        flush();
-        stringMessageBody = message;
-        duplicateMessageCount = 1;
-
-    }
-
-
-
-    private static void arrayStrategy(int[] message) {
-        logToConsolePure(ARRAY_PREFIX, "");
-        printArrayToConsole(message);
-    }
-
-    private static void arrayStrategy(int[][] message) {
-        logToConsolePure(MATRIX_PREFIX, "");
-        StringBuilder result = new StringBuilder();
-        logToConsole("{", "");
-        for (int[] elem : message) {
-            printArrayToConsole(elem);
+        if (currentMessage.shouldFlush(message)) {
+            controller.log(currentMessage, severityLevel);
+            currentMessage = message;
+            return;
         }
-        logToConsole("}", "");
-        String endMessage = result.toString();
-        logToConsolePure(endMessage, "");
+        currentMessage.add(message);
     }
 
-    private static void printArrayToConsole(int[] arrayMessage) {
-        logToConsole("", Arrays.toString(arrayMessage).replace('[', '{').replace(']', '}'));
+    public  void log(int[] message, SeverityLevel severityLevel) {
+        DecoratingMessage arrayMessage = new ArrayMessage(message);
+        log(arrayMessage, severityLevel);
     }
 
-    private static void logToConsole(String prefix, String message) {
-        System.out.println(prefix + message);
+    public  void log(int[][] message, SeverityLevel severityLevel) {
+        DecoratingMessage matrixMessage = new MatrixMessage(message);
+        log(matrixMessage, severityLevel);
     }
 
-    private static void logToConsolePure(String prefix, String message) {
-        System.out.print((prefix + message));
+
+
+    public void flush(SeverityLevel severityLevel) {
+        controller.log(currentMessage, severityLevel);
     }
 
-    public static void flush() {
-        //move fluch() in subject message
-        stringOutputStrategy();
-        numberOutputStrategy();
-        stringMessageBody = null;
-        duplicateMessageCount = null;
-        numberAccumulator = null;
-    }
-
-    public static void stringOutputStrategy() {
-        String postfix = "";
-        if (stringMessageBody != null) {
-            if (duplicateMessageCount > 1) {
-                postfix = " (x" + duplicateMessageCount + ")";
-            }
-            logToConsole(STRING_PREFIX, stringMessageBody + postfix);
-        }
-    }
-
-    public static void numberOutputStrategy() {
-        if (numberAccumulator != null) {
-            logToConsole(PRIMITIVE_PREFIX, numberAccumulator.toString());
-        }
-    }
 
 }

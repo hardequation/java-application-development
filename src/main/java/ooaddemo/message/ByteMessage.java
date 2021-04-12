@@ -11,16 +11,20 @@ public class ByteMessage implements DecoratingMessage {
      * JavaBeans -> POJO
      * OCP
      */
-    public byte getBody() {
-        return body;
-    }
-
-    public void setBody(byte body) {
-        this.body = body;
-    }
 
     @Override
     public String getDecoratedMessage() {
         return "primitive: " + body;
     }
+
+    @Override
+    public void add(Object message) {
+        this.body += ((IntegerMessage) message).getBody();
+    }
+
+    @Override
+    public boolean shouldFlush(Object message) {
+        return this.getClass() != message.getClass();
+    }
+
 }
