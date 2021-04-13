@@ -37,10 +37,10 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     public void shouldLogInteger() throws IOException {
 
         //region when
-        Facade.log(1, SeverityLevel.ERROR);
-        Facade.log(0, SeverityLevel.ERROR);
-        Facade.log(-1, SeverityLevel.ERROR);
-        Facade.flush(SeverityLevel.ERROR);
+        Facade.log(1, SeverityLevel.WARNING);
+        Facade.log(0, SeverityLevel.WARNING);
+        Facade.log(-1, SeverityLevel.WARNING);
+        Facade.flush(SeverityLevel.WARNING);
         //endregion
 
         //region then

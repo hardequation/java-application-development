@@ -15,6 +15,9 @@ public class LoggerController extends ValidatingController {
     public DecoratingMessage getCurrentMessage() {
         return currentMessage;
     }
+    public Printer getPrinter() {
+        return printer;
+    }
 
     private DecoratingMessage currentMessage;
     /**int

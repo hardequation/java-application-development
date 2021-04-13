@@ -2,6 +2,7 @@ package ooaddemo.message;
 
 public class ByteMessage implements DecoratingMessage {
     private byte body;
+    public static final String PRIMITIVE_PREFIX = "primitive: ";
 
     public ByteMessage(byte body) {
         this.body = body;
@@ -12,19 +13,27 @@ public class ByteMessage implements DecoratingMessage {
      * OCP
      */
 
+    public int getBody() {
+        return body;
+    }
+
     @Override
     public String getDecoratedMessage() {
-        return "primitive: " + body;
+        return PRIMITIVE_PREFIX + body;
     }
 
     @Override
     public void add(Object message) {
-        this.body += ((IntegerMessage) message).getBody();
+        this.body += ((ByteMessage) message).getBody();
     }
 
     @Override
     public boolean shouldFlush(Object message) {
-        return this.getClass() != message.getClass();
+        if (this.getClass() != message.getClass()) {
+            return true;
+        } else {
+            return ((ByteMessage) message).getBody() + this.body > Byte.MAX_VALUE;
+        }
     }
 
 }

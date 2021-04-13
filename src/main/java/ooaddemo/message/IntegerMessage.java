@@ -12,6 +12,7 @@ public class IntegerMessage implements DecoratingMessage {
      * JavaBeans -> POJO
      * OCP
      */
+
     public int getBody() {
         return body;
     }
@@ -28,6 +29,10 @@ public class IntegerMessage implements DecoratingMessage {
 
     @Override
     public boolean shouldFlush(Object message) {
-        return this.getClass() != message.getClass();
+        if (this.getClass() != message.getClass()) {
+            return true;
+        } else {
+            return ((IntegerMessage) message).getBody() + new Long(this.body) > Integer.MAX_VALUE;
+        }
     }
 }

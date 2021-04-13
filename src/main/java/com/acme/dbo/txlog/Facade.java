@@ -37,7 +37,8 @@ public class Facade {
     }
 
     public static void flush(SeverityLevel severityLevel) {
-        controller.log(controller.getCurrentMessage(), severityLevel);
+        controller.getPrinter().print(controller.getCurrentMessage().getDecoratedMessage());
+        //controller.log(controller.getCurrentMessage(), severityLevel);
     }
 
 

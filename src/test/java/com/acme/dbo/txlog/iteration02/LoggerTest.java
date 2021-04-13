@@ -80,20 +80,20 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     @Test
     public void shouldLogCorrectlyByteOverflowWhenSequentBytes() {
         //region when
-        Facade.log("str 1", SeverityLevel.WARNING);
+        //Facade.log("str 1", SeverityLevel.WARNING);
         Facade.log((byte) 10, SeverityLevel.WARNING);
         Facade.log((byte) Byte.MAX_VALUE, SeverityLevel.WARNING);
-        Facade.log("str 2", SeverityLevel.WARNING);
-        Facade.log(0, SeverityLevel.WARNING);
+        //Facade.log("str 2", SeverityLevel.WARNING);
+//        Facade.log(0, SeverityLevel.WARNING);
         Facade.flush(SeverityLevel.WARNING);
         //endregion
 
         //region then
 
-        assertSysoutContains("str 1");
+        //assertSysoutContains("str 1");
         assertSysoutContains("10");
         assertSysoutContains("" + Byte.MAX_VALUE);
-        assertSysoutContains("str 2");
+        //assertSysoutContains("str 2");
         assertSysoutContains("0");
 
         //endregion
