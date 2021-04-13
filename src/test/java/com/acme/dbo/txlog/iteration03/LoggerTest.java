@@ -2,7 +2,10 @@ package com.acme.dbo.txlog.iteration03;
 
 import com.acme.dbo.txlog.Facade;
 import com.acme.dbo.txlog.SysoutCaptureAndAssertionAbility;
+import ooaddemo.controller.LoggerController;
 import ooaddemo.domain.SeverityLevel;
+import ooaddemo.filter.SeverityMessageFilter;
+import ooaddemo.printer.ConsolePrinter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +14,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class LoggerTest implements SysoutCaptureAndAssertionAbility {
-    Facade facade = new Facade();
 
     //region given
     @Before
     public void setUpSystemOut() throws IOException {
+        Facade.setController(new LoggerController(
+                new ConsolePrinter(),
+                new SeverityMessageFilter(SeverityLevel.DEBUG)));
         resetOut();
         captureSysout();
     }
@@ -30,8 +35,8 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     @Test
     public void shouldLogIntegersArray() throws IOException {
         //region when
-        facade.log(new int[]{-1, 0, 1}, SeverityLevel.WARNING);
-        facade.flush(SeverityLevel.WARNING);
+        Facade.log(new int[]{-1, 0, 1}, SeverityLevel.WARNING);
+        Facade.flush(SeverityLevel.WARNING);
         //endregion
 
         //region then
@@ -44,8 +49,8 @@ public class LoggerTest implements SysoutCaptureAndAssertionAbility {
     @Test
     public void shouldLogIntegersMatrix() throws IOException {
         //region when
-        facade.log(new int[][]{{-1, 0, 1}, {1, 2, 3}, {-1, -2, -3}}, SeverityLevel.WARNING);
-        facade.flush(SeverityLevel.WARNING);
+        Facade.log(new int[][]{{-1, 0, 1}, {1, 2, 3}, {-1, -2, -3}}, SeverityLevel.WARNING);
+        Facade.flush(SeverityLevel.WARNING);
         //endregion
 
         //region then

@@ -12,6 +12,11 @@ public class LoggerController extends ValidatingController {
     private final Printer printer;
     private final MessageFilter filter;
 
+    public DecoratingMessage getCurrentMessage() {
+        return currentMessage;
+    }
+
+    private DecoratingMessage currentMessage;
     /**int
      * Constructor DI
      */
@@ -24,12 +29,22 @@ public class LoggerController extends ValidatingController {
     public void log(DecoratingMessage message, SeverityLevel severity) {
         super.log(message, severity);
 
-        if (filter.filter(message, severity)) {
-            printer.print(message.getDecoratedMessage());
+        //Printer.commonMethod();
+        //printer.instMethod();
+
+        if (currentMessage == null) {
+            currentMessage = message;
+            return;
         }
+        if (currentMessage.shouldFlush(message)) {
+            if (filter.filter(message, severity)) {
+                printer.print(message.getDecoratedMessage());
+            }
+            currentMessage = message;
+            return;
+        }
+        currentMessage.add(message);
     }
 
-    public MessageFilter getFilter() {
-        return filter;
-    }
+
 }
