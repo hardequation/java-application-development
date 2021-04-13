@@ -38,7 +38,7 @@ public class LoggerController extends ValidatingController {
         }
         if (currentMessage.shouldFlush(message)) {
             if (filter.filter(message, severity)) {
-                printer.print(message.getDecoratedMessage());
+                printer.print(currentMessage.getDecoratedMessage());
             }
             currentMessage = message;
             return;
